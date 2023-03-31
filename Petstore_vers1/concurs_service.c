@@ -4,7 +4,7 @@
 #include <string.h>
 #include <assert.h>
 /*
-Add a paricipant to the store
+Add a paricipant to the copetition
 */
 int addParticipant(MyList* l, char* nume, char* prenume, int scor) {
 	Participant p = createParticipant(nume, prenume, scor);
@@ -49,10 +49,11 @@ int sortParticipant(MyList* l) {
 
 }
 /*
-Filter pets in the list
+Filter participants in the list
 typeSubstring - cstring
 return all participants where typeSubstring is a substring of the type
 */
+
 MyList filter_Participants(MyList* l, int scor_min) {
 	
 	MyList rez = createEmpty();
@@ -69,20 +70,21 @@ MyList getAllParticipants(MyList* l, char* typeSubstring) {
 	if (typeSubstring == NULL || strlen(typeSubstring) == 0) {
 		return copyList(l);
 	}
+}
+
+MyList filter_Participants_2(MyList* l, int scor_maxim) {
+
 	MyList rez = createEmpty();
 	for (int i = 0; i < size(l); i++) {
 		Participant p = get(l, i);
-		if (strstr(p.nume, typeSubstring) != NULL) {
+		if (p.scor <= scor_maxim) {
 			add(&rez, p);
 		}
 	}
 	return rez;
 }
-/*
-MyList create_undo_list() {
-	Undo_list = (MyList*)malloc(sizeof());
-}
-*/
+
+
 
 
 void testAddParticipant() {

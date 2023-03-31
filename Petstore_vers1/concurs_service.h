@@ -12,7 +12,7 @@ int editParticipant(MyList* l, char* nume, char* prenume, int scor, char* nume_n
 
 int sortParticipant(MyList* l);
 
-MyList* Undo_list;
+
 
 
 /*
@@ -20,8 +20,11 @@ MyList* Undo_list;
   typeSubstring - cstring
   return all participants where typeSubstring is a substring of the type
 */
+
 MyList getAllParticipants(MyList* l, char* typeSubstring);
 
 MyList filter_Participants(MyList* l, int scor_min);
+
+MyList filter_Participants_2(MyList* l, int scor_maxim);
 
 void testAddParticipant();

@@ -6,10 +6,21 @@ typedef struct {
 	int lg;
 } MyList;
 
+typedef struct {
+	MyList lst[50];
+	int lg;
+} UndoList;
+
 /*
   Create an empty list
 */
 MyList createEmpty();
+
+UndoList createUndoEmpty();
+
+void addUndoList(MyList l, UndoList* undo);
+
+MyList undoStep(UndoList* undo);
 
 /*
   Destroy list

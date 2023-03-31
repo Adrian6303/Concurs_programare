@@ -12,6 +12,29 @@ MyList createEmpty() {
 	return rez;
 }
 
+UndoList createUndoEmpty()
+{
+	UndoList undo;
+	///undo.lst = malloc(sizeof(MyList) * 100);
+	undo.lg = 0;
+	return undo;
+}
+
+void addUndoList(MyList l, UndoList* undo)
+{
+	undo->lst[undo->lg] = l;
+	undo->lg++;
+}
+
+MyList undoStep(UndoList* undo)
+{
+	if (undo->lg >= 0) 
+		undo->lg--;
+		
+
+	return undo->lst[undo->lg];
+	
+}
 /*
 Destroy list
 */

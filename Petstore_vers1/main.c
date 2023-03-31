@@ -12,12 +12,12 @@ void testAll() {
 	testCreateList();
 	testIterateList();
 	testCopyList();
-	testAddParticipant();
 }
 /*
   Read participants from standard input and add to programing competition
 */
-void readParticipant(MyList* l) {
+void readParticipant(MyList* l, UndoList* undo) {
+	addUndoList(*l, undo);
 	printf("Nume:");
 	char nume[30];
 	scanf_s("%s", nume, 30);
@@ -30,9 +30,11 @@ void readParticipant(MyList* l) {
 	int error = addParticipant(l, nume, prenume, scor);
 	if (error != 0) {
 		printf("Participant invalid.\n");
+		*l = undoStep(undo);
 	}
 	else {
 		printf("Participant adaugat.\n");
+		
 	}
 }
 
@@ -44,21 +46,36 @@ void printAllParticipants(MyList* l) {
 		printf("%15s %15s %5d\n", p.nume, p.prenume, p.scor);
 	}
 }
-void filterParticipants(MyList* l) {
-	printf("Scorul minim:");
-	int scor_minim=0;
-	scanf_s("%d", &scor_minim);
+
+void filterParticipants2(MyList* l) {
+
+	printf("Scorul maxim:");
+	int scor_maxim=0;
+	scanf_s("%d", &scor_maxim);
 	
+	MyList filteredL = filter_Participants_2(l, scor_maxim);
+	printAllParticipants(&filteredL);
+}
+
+void filterParticipants(MyList* l) {
+
+	printf("Scorul minim:");
+	int scor_minim = 0;
+	scanf_s("%d", &scor_minim);
+
 	MyList filteredL = filter_Participants(l, scor_minim);
 	printAllParticipants(&filteredL);
 }
 
-void sortParticipantsByScore(MyList* l) {
+void sortParticipantsByScore(MyList* l, UndoList* undo) {
 
+	addUndoList(*l, undo);
 	sortParticipant(l);
 	printf("Lista a fost filtrata dupa cel mai mare scor!\n");
+	
 }
-void editParticipants(MyList* l) {
+void editParticipants(MyList* l, UndoList* undo) {
+	addUndoList(*l, undo);
 	printf("Nume:");
 	char nume[30];
 	scanf_s("%s", nume, 30);
@@ -85,10 +102,12 @@ void editParticipants(MyList* l) {
 	}
 	else {
 		printf("Participant modificat.\n");
+		
 	}
 }
 
-void deleteParticipants(MyList* l) {
+void deleteParticipants(MyList* l, UndoList* undo) {
+	addUndoList(*l, undo);
 	printf("Nume:");
 	char nume[30];
 	scanf_s("%s", nume, 30);
@@ -104,34 +123,46 @@ void deleteParticipants(MyList* l) {
 	}
 	else {
 		printf("Participant sters.\n");
+		
 	}
+}
+MyList undo(MyList l, UndoList* undo) {
+	return undoStep(undo);
 }
 
 void run() {
 	MyList allParticipants = createEmpty();
+	UndoList undoLists = createUndoEmpty();
+	addUndoList(allParticipants, &undoLists);
 	int ruleaza = 1;
 	while (ruleaza) {
-		printf("1 Adauga\n2 Modifica\n3 Sterge\n4 Filtreaza\n5 Sorteaza\n6 All\n0 Exit\nCommand:");
+		printf("1 Adauga\n2 Modifica\n3 Sterge\n4 Filtreaza scor minim\n5 Filtreaza scor maxim\n6 Sorteaza\n7 All\n8 Undo\n0 Exit\nCommand:");
 		int cmd = 0;
 		scanf_s("%d", &cmd);
 		switch (cmd) {
 		case 1:
-			readParticipant(&allParticipants);
+			readParticipant(&allParticipants, &undoLists);
 			break;
 		case 2:
-			editParticipants(&allParticipants);
+			editParticipants(&allParticipants, &undoLists);
 			break;
 		case 3:
-			deleteParticipants(&allParticipants);
+			deleteParticipants(&allParticipants, &undoLists);
 			break;
 		case 4:
 			filterParticipants(&allParticipants);
 			break;
 		case 5:
-			sortParticipantsByScore(&allParticipants);
+			filterParticipants2(&allParticipants);
 			break;
 		case 6:
+			sortParticipantsByScore(&allParticipants, &undoLists);
+			break;
+		case 7:
 			printAllParticipants(&allParticipants);
+			break;
+		case 8:
+			allParticipants = undo(allParticipants, &undoLists);
 			break;
 		case 0:
 			ruleaza = 0;		
